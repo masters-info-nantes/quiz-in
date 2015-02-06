@@ -96,6 +96,8 @@ main(int argc, char **argv) {
         pos++;
     }
 
+    
+    srand(time(NULL)); // pour que le rand fonctionne
     int r = rand() % pos;
     printf("question : %s\n", questions[r].text);
   
