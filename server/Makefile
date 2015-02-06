@@ -1,5 +1,5 @@
 CC = gcc
-CPPFLAGS=-I../model
+CPPFLAGS=-I../model -pthread
 
 SERVER = server
 

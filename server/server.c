@@ -18,17 +18,17 @@ typedef struct sockaddr_in sockaddr_in;
 typedef struct hostent hostent;
 typedef struct servent servent;
 
-const char* getfield(char* line, int num)
+const Question getfield(char* line)
 {
-    const char* tok;
-    for (tok = strtok(line, ";");
-            tok && *tok;
-            tok = strtok(NULL, ";\n"))
-    {
-        if (!--num)
-            return tok;
-    }
-    return NULL;
+    Question q;
+   
+   strncpy(q.text, strtok(line, ";"), 254);
+   strncpy(q.goodAnswer, strtok(line, ";"), 254);
+   strncpy(q.wrongAnswer1, strtok(line, ";"), 254);
+   strncpy(q.wrongAnswer2, strtok(line, ";"), 254);
+   strncpy(q.wrongAnswer3, strtok(line, ";"), 254);
+   
+    return q;
 }
 
 /*------------------------------------------------------*/
@@ -91,11 +91,7 @@ main(int argc, char **argv) {
     while (fgets(line, 1024, stream))
     {
         char* tmp = strdup(line);
-        //strncpy(questions[pos].text, getfield(tmp, 1), 254);
-        strncpy(questions[pos].goodAnswer, getfield(tmp, 2), 254);
-        //strncpy(questions[pos].wrongAnswer1, getfield(tmp, 3), 254);
-        //strncpy(questions[pos].wrongAnswer3, getfield(tmp, 4), 254);
-        //strncpy(questions[pos].wrongAnswer3, getfield(tmp, 5), 254);
+        questions[pos] = getfield(tmp);
         free(tmp);
         pos++;
     }
