@@ -1,7 +1,12 @@
-CC = gcc
+CFLAGS=-g -Wall
 CPPFLAGS=-I../model
 
-CLIENT = client
+all: client 
 
-client: client.c
-	$(CC) $(CPPFLAGS) client.c -o $(CLIENT)
+client: main.o client.o
+
+*.c: *.h
+	@touch $@
+
+clean:
+	rm -rf *.o client

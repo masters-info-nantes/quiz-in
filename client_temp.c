@@ -1,47 +1,28 @@
-/*-----------------------------------------------------------
-Client a lancer apres le serveur avec la commande :
-client <adresse-serveur> <message-a-transmettre>
-------------------------------------------------------------*/
-#include <stdlib.h>
-#include <stdio.h>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <netdb.h>
-#include <string.h>
-
-typedef struct sockaddr 	sockaddr;
-typedef struct sockaddr_in 	sockaddr_in;
-typedef struct hostent 		hostent;
-typedef struct servent 		servent;
-
-int main(int argc, char **argv) {
+/* int main(int argc, char **argv) {
   
     int 	socket_descriptor, 	/* descripteur de socket */
-		longueur; 		/* longueur d'un buffer utilisé */
-    sockaddr_in adresse_locale; 	/* adresse de socket local */
+		longueur; 		        /* longueur d'un buffer utilisé */
+    sockaddr_in adresse_locale; /* adresse de socket local */
     hostent *	ptr_host; 		/* info sur une machine hote */
-    servent *	ptr_service; 		/* info sur service */
+    servent *	ptr_service;    /* info sur service */
     char 	buffer[256];
     char *	prog; 			/* nom du programme */
     char *	host; 			/* nom de la machine distante */
-    char *	mesg; 			/* message envoyé */
      
-    if (argc != 3) {
-	perror("usage : client <adresse-serveur> <message-a-transmettre>");
+    if (argc != 2) {
+	perror("usage : client <adresse-serveur>");
 	exit(1);
     }
    
     prog = argv[0];
     host = argv[1];
-    mesg = argv[2];
     
     printf("nom de l'executable : %s \n", prog);
     printf("adresse du serveur  : %s \n", host);
-    printf("message envoye      : %s \n", mesg);
     
     if ((ptr_host = gethostbyname(host)) == NULL) {
-	perror("erreur : impossible de trouver le serveur a partir de son adresse.");
-	exit(1);
+	   perror("erreur : impossible de trouver le serveur a partir de son adresse.");
+	   exit(1);
     }
     
     /* copie caractere par caractere des infos de ptr_host vers adresse_locale */
@@ -71,35 +52,44 @@ int main(int argc, char **argv) {
     
     /* creation de la socket */
     if ((socket_descriptor = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
-	perror("erreur : impossible de creer la socket de connexion avec le serveur.");
-	exit(1);
+	   perror("erreur : impossible de creer la socket de connexion avec le serveur.");
+	   exit(1);
     }
     
     /* tentative de connexion au serveur dont les infos sont dans adresse_locale */
     if ((connect(socket_descriptor, (sockaddr*)(&adresse_locale), sizeof(adresse_locale))) < 0) {
-	perror("erreur : impossible de se connecter au serveur.");
-	exit(1);
+	   perror("erreur : impossible de se connecter au serveur.");
+	   exit(1);
     }
     
     printf("connexion etablie avec le serveur. \n");
     
-    printf("envoi d'un message au serveur. \n");
-      
+    printf("Choisir votre pseudo :\n");
+
+    char pseudo[50];
+    scanf("%s", pseudo);
+    printf("%s", pseudo);
+
+    char p[50]; 
+    printf ("saisir pseaudo :"); 
+    scanf ("%s", &p); 
+    printf ("%s\n", p); 
+
     /* envoi du message vers le serveur */
-    if ((write(socket_descriptor, mesg, strlen(mesg))) < 0) {
-	perror("erreur : impossible d'ecrire le message destine au serveur.");
-	exit(1);
+    if ((write(socket_descriptor, pseudo, strlen(pseudo))) < 0) {
+       perror("erreur : impossible d'ecrire le message destine au serveur.");
+       exit(1);
     }
     
     /* mise en attente du prgramme pour simuler un delai de transmission */
     sleep(3);
      
-    printf("message envoye au serveur. \n");
+    printf("envoie vers le serveur... \n");
                 
     /* lecture de la reponse en provenance du serveur */
     while((longueur = read(socket_descriptor, buffer, sizeof(buffer))) > 0) {
-	printf("reponse du serveur : \n");
-	write(1,buffer,longueur);
+       printf("reponse du serveur : \n");
+       write(1,buffer,longueur);
     }
     
     printf("\nfin de la reception.\n");
@@ -111,3 +101,4 @@ int main(int argc, char **argv) {
     exit(0);
     
 }
+*/

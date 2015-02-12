@@ -1,7 +1,12 @@
-CC = gcc
-CPPFLAGS=-I../model -pthread
+CFLAGS=-g -Wall -std=c99
+CPPFLAGS=-I../model
+LDLIBS=-lpthread
 
-SERVER = server
+all: server
+server: main.o server.o
 
-server: server.c
-	$(CC) $(CPPFLAGS) -o $(SERVER) server.c
+*.c: *.h
+	@touch $@
+
+clean:
+	rm -rf *.o server
