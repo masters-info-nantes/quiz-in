@@ -19,6 +19,8 @@ int main(int argc, char **argv) {
         exit(1);
     }
 
+    Server_addAllQuestions(server);
+
     while(true){
         sockaddr_in* clientInfos = malloc(sizeof(sockaddr_in));
         socklen_t clientInfosSize = sizeof(clientInfos);

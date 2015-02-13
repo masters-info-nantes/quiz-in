@@ -3,11 +3,8 @@
 
 typedef struct _Question Question;
 struct _Question{
-	char text[256];
-	char goodAnswer[256];
-	char wrongAnswer1[256];
-	char wrongAnswer2[256];
-	char wrongAnswer3[256];
+	char text[512];
+	char answer[0][512];
 };
 
 #endif

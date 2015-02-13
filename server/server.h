@@ -25,11 +25,14 @@ struct _Server {
 
     Player** players;
     pthread_t* clientsThread;
+    Question** questions;
 };
 
 Server* Server_create();
 bool Server_run(Server* server, int port);
 void Server_listenClients(Server* server, int socketID, sockaddr_in* clientInfos);
 void* Server_clientThread(void* params);
+void Server_addAllQuestions(Server* server);
+Question* Server_getQuestionFromLine(char* line);
 
 #endif

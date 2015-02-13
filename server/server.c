@@ -101,5 +101,54 @@ void* Server_clientThread(void* params) {
 
     printf("[Quiz in][server] New client connected #\n"); 
     //Player_printClientInfos(player);
-    return;
+    return NULL;
+}
+
+void Server_addAllQuestions(Server* server) {
+
+    FILE *file;
+    file = fopen("quiz-in.csv","r");
+    int ch, number_of_lines = 0;
+
+    do 
+    {
+        ch = fgetc(file);
+        if(ch == '\n')
+            number_of_lines++;
+    } while (ch != EOF);
+
+    // last line doesn't end with a new line!
+    // but there has to be a line at least before the last line
+    if(ch != '\n' && number_of_lines != 0) 
+        number_of_lines++;
+    fclose(file);   
+
+    server->questions = calloc(number_of_lines, sizeof(Question*));
+    if(server->questions){
+        file = fopen("quiz-in.csv", "r");
+        char line[2048];
+        int pos = 0;
+        while (fgets(line, 2048, file))
+        {
+            char* tmp = strdup(line);
+            server->questions[pos] = Server_getQuestionFromLine(tmp);
+            free(tmp);
+            pos++;
+        }
+    }
+
+    printf("[Quiz in][server] %d new questions are add on the server\n", number_of_lines); 
+}
+
+Question* Server_getQuestionFromLine(char* line)
+{
+    Question *q = (Question*) malloc(sizeof(Question));
+   
+   strncpy(q->text, strtok(line, ";"), 254);
+   strncpy(q->answer[0], strtok(NULL, ";"), 254);
+   strncpy(q->answer[1], strtok(NULL, ";"), 254);
+   strncpy(q->answer[2], strtok(NULL, ";"), 254);
+   strncpy(q->answer[3], strtok(NULL, ";"), 254);
+   
+    return q;
 }
