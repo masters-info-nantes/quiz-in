@@ -7,6 +7,4 @@ struct _Question{
 	char answer[4][512];
 };
 
-void Question_print(Question q);
-
 #endif

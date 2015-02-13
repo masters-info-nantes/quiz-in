@@ -140,8 +140,16 @@ void Server_addAllQuestions(Server* server) {
     printf("[Quiz in][server] %d new questions are add on the server\n", number_of_lines); 
 }
 
-Question* Server_getQuestionFromLine(char* line)
-{
+void Server_printQuestion(Question *q) {
+    printf("Question : %s\n", q->text);
+    printf("  Réponse 1 : %s\n", q->answer[0]);
+    printf("  Réponse 2 : %s\n", q->answer[1]);
+    printf("  Réponse 3 : %s\n", q->answer[2]);
+    printf("  Réponse 4 : %s\n", q->answer[3]);
+}
+
+Question* Server_getQuestionFromLine(char* line) {
+    
     Question *q = (Question*) malloc(sizeof(Question));
    
    strncpy(q->text, strtok(line, ";"), 254);
@@ -149,6 +157,8 @@ Question* Server_getQuestionFromLine(char* line)
    strncpy(q->answer[1], strtok(NULL, ";"), 254);
    strncpy(q->answer[2], strtok(NULL, ";"), 254);
    strncpy(q->answer[3], strtok(NULL, ";"), 254);
+
+   printf("%s\n", q->text);
    
     return q;
 }

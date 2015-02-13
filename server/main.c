@@ -1,4 +1,5 @@
 #include "server.h"
+#include "question.h"
 
 int main(int argc, char **argv) {
     
@@ -20,6 +21,8 @@ int main(int argc, char **argv) {
     }
 
     Server_addAllQuestions(server);
+
+    Server_printQuestion(server->questions[0]);
 
     while(true){
         sockaddr_in* clientInfos = malloc(sizeof(sockaddr_in));

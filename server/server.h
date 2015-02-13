@@ -33,6 +33,7 @@ bool Server_run(Server* server, int port);
 void Server_listenClients(Server* server, int socketID, sockaddr_in* clientInfos);
 void* Server_clientThread(void* params);
 void Server_addAllQuestions(Server* server);
+void Server_printQuestion(Question *q);
 Question* Server_getQuestionFromLine(char* line);
 
 #endif
