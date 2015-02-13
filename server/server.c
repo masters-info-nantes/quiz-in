@@ -121,7 +121,7 @@ void Server_addAllQuestions(Server* server) {
     // but there has to be a line at least before the last line
     if(ch != '\n' && number_of_lines != 0) 
         number_of_lines++;
-    fclose(file);   
+    fclose(file);
 
     server->questions = calloc(number_of_lines, sizeof(Question*));
     if(server->questions){
