@@ -35,5 +35,6 @@ void* Server_clientThread(void* params);
 void Server_addAllQuestions(Server* server);
 void Server_printQuestion(Question *q);
 Question* Server_getQuestionFromLine(char* line);
+void Server_sendQuestion(Server* server, Player* player, Question *question);
 
 #endif

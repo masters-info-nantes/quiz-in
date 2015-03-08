@@ -101,6 +101,19 @@ void* Server_clientThread(void* params) {
 
     printf("[Quiz in][server] New client connected #\n"); 
     //Player_printClientInfos(player);
+    Server_sendQuestion(server, player, server->questions[0]);
+
+    char name[50];
+    int longueur;
+
+    if ((longueur = read(player->socketID, name, sizeof(name))) <= 0) 
+        return NULL;
+
+    printf("ok\n", name);
+
+    name[longueur] = '\0';
+
+    printf("%s\n", name);
     return NULL;
 }
 
@@ -157,8 +170,16 @@ Question* Server_getQuestionFromLine(char* line) {
    strncpy(q->answer[1], strtok(NULL, ";"), 254);
    strncpy(q->answer[2], strtok(NULL, ";"), 254);
    strncpy(q->answer[3], strtok(NULL, ";"), 254);
-
-   printf("%s\n", q->text);
    
     return q;
+}
+
+void Server_sendQuestion(Server* server, Player* player, Question *question){
+
+    if(write(player->socketID, *question, sizeof(Question)) <= 0){
+        printf("error\n");
+        exit(0);
+    }
+     
+    printf("> PLID sent to player #%d\n", player->playerID + 1);
 }
