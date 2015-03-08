@@ -30,7 +30,7 @@ struct _Server {
 
 Server* Server_create();
 bool Server_run(Server* server, int port);
-void Server_listenClients(Server* server, int socketID, sockaddr_in* clientInfos);
+void Server_listenClients(Server* server, int socketID, sockaddr_in* clientInfos, int id);
 void* Server_clientThread(void* params);
 void Server_addAllQuestions(Server* server);
 void Server_printQuestion(Question *q);

@@ -51,7 +51,7 @@ void Client_setPseudo(Client* client){
     char pseudo[50];
     printf("[Quiz in] Choose your pseudo\n");
     scanf("%s", pseudo);
-    printf("%s %d\n", pseudo, client->socketID);
+    printf("[Quiz in] Hello %s\n", pseudo);
 
     if(write(client->socketID, pseudo, sizeof(pseudo)) <= 0){
         printf("error\n");
@@ -59,8 +59,16 @@ void Client_setPseudo(Client* client){
     }
 }
 
+void Client_printQuestion(Question q) {
+    printf("Question : %s\n", q.text);
+    printf("  Réponse 1 : %s\n", q.answer[0]);
+    printf("  Réponse 2 : %s\n", q.answer[1]);
+    printf("  Réponse 3 : %s\n", q.answer[2]);
+    printf("  Réponse 4 : %s\n", q.answer[3]);
+}
+
 void Client_getQuestion(Client* client){
-    int typeNotif;
-    int clientStatus = read(client->socketID, &typeNotif, sizeof(typeNotif));
-    printf("%d", typeNotif);
+    Question q;
+    int clientStatus = read(client->socketID, &q, sizeof(q));
+    Client_printQuestion(q);
 }

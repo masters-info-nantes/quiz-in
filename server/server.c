@@ -67,16 +67,19 @@ bool Server_run(Server* server, int port){
     return true;
 }
 
-void Server_listenClients(Server* server, int socketID, sockaddr_in* clientInfos){
+void Server_listenClients(Server* server, int socketID, sockaddr_in* clientInfos, int id){
     Player* player = malloc(sizeof(Player));
     if(player == NULL){
         return;
     }
 
+    player->playerID = id;
     player->socketID = socketID; 
     player->socketInfos = clientInfos;
-
-    void* threadParams[2] = {player, server};
+    
+    void** threadParams = (void**) calloc(2, sizeof(void*));
+    threadParams[0] = player;
+    threadParams[1] = server;
 
     // Create thread dedicated to the new client
     int threadCreated = pthread_create(&server->clientsThread[0], 
@@ -98,22 +101,23 @@ void* Server_clientThread(void* params) {
     void** paramList = (void**) params;
     Player* player = (Player*) paramList[0];
     Server* server = (Server*) paramList[1];
+    
+    
+    printf("[Quiz in][server] New client sign in\n");
 
-    printf("[Quiz in][server] New client connected #\n"); 
-    //Player_printClientInfos(player);
-    Server_sendQuestion(server, player, server->questions[0]);
-
-    char name[50];
+    char name[51];
     int longueur;
 
     if ((longueur = read(player->socketID, name, sizeof(name))) <= 0) 
         return NULL;
 
-    printf("ok\n", name);
-
     name[longueur] = '\0';
 
-    printf("%s\n", name);
+    strcpy(player->pseudo, name);
+    printf("[Quiz in][server] New client is %s\n", name);
+
+    Server_sendQuestion(server, player, server->questions[0]);
+
     return NULL;
 }
 
@@ -175,11 +179,13 @@ Question* Server_getQuestionFromLine(char* line) {
 }
 
 void Server_sendQuestion(Server* server, Player* player, Question *question){
-
-    if(write(player->socketID, *question, sizeof(Question)) <= 0){
+    
+    void* params = (void*)question;
+    
+    if(write(player->socketID, params, sizeof(params)) <= 0){
         printf("error\n");
         exit(0);
     }
      
-    printf("> PLID sent to player #%d\n", player->playerID + 1);
+    printf("[Quiz in][server] Question send to player #%d : %s\n", player->playerID, player->pseudo);
 }

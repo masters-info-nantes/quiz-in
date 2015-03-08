@@ -18,6 +18,7 @@ int main(int argc, char **argv) {
     if(!Client_run(client, serverName, serverPort))
         exit(1);
     
+    Client_setPseudo(client);
     Client_getQuestion(client);
 
 }

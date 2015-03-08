@@ -22,8 +22,7 @@ int main(int argc, char **argv) {
 
     Server_addAllQuestions(server);
 
-    Server_printQuestion(server->questions[0]);
-
+    int id = 1;
     while(true){
         sockaddr_in* clientInfos = malloc(sizeof(sockaddr_in));
         socklen_t clientInfosSize = sizeof(clientInfos);
@@ -32,7 +31,8 @@ int main(int argc, char **argv) {
             perror("[Quiz in][server] Cannot initiate connexion with a new client\n");
             exit(1);
         }
-        Server_listenClients(server, socketID, clientInfos);     
+        Server_listenClients(server, socketID, clientInfos, id);
+        id = id+1;  
     }
 
 

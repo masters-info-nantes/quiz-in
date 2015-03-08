@@ -15,6 +15,7 @@ typedef struct _Player Player;
 struct _Player {
     int socketID;
     int playerID;
+    char pseudo[51];
     sockaddr_in* socketInfos;
 };
 

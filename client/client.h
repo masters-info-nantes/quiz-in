@@ -28,5 +28,6 @@ bool Client_run(Client* client, char* serverName, int serverPort);
 
 void Client_setPseudo(Client* client);
 void Client_getQuestion(Client* client);
+void Client_printQuestion(Question q);
 
 #endif
