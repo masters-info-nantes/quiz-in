@@ -59,16 +59,16 @@ void Client_setPseudo(Client* client){
     }
 }
 
-void Client_printQuestion(Question q) {
-    printf("Question : %s\n", q.text);
-    printf("  Réponse 1 : %s\n", q.answer[0]);
-    printf("  Réponse 2 : %s\n", q.answer[1]);
-    printf("  Réponse 3 : %s\n", q.answer[2]);
-    printf("  Réponse 4 : %s\n", q.answer[3]);
+void Client_printQuestion(Question* q) {
+    printf("Question : %s\n", q->text);
+    printf("  Réponse 1 : %s\n", q->answer[0]);
+    printf("  Réponse 2 : %s\n", q->answer[1]);
+    printf("  Réponse 3 : %s\n", q->answer[2]);
+    printf("  Réponse 4 : %s\n", q->answer[3]);
 }
 
 void Client_getQuestion(Client* client){
-    Question q;
-    int clientStatus = read(client->socketID, &q, sizeof(q));
+    Question* q;
+    int clientStatus = read(client->socketID, q, sizeof(q));
     Client_printQuestion(q);
 }

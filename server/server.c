@@ -180,7 +180,7 @@ Question* Server_getQuestionFromLine(char* line) {
 
 void Server_sendQuestion(Server* server, Player* player, Question *question){
     
-    void* params = (void*)question;
+    void* params = (void*)Server_shuffleAnswers(question);
     
     if(write(player->socketID, params, sizeof(params)) <= 0){
         printf("error\n");
@@ -188,4 +188,51 @@ void Server_sendQuestion(Server* server, Player* player, Question *question){
     }
      
     printf("[Quiz in][server] Question send to player #%d : %s\n", player->playerID, player->pseudo);
+}
+
+void swapping (char** elt1, char** elt2)
+{
+    char *temp = *elt1;
+    *elt1 = *elt2;
+    *elt2 = temp;
+}
+
+Question* Server_shuffleAnswers (Question* q)
+{
+    int n=4;
+    char** arr=(char*[4]){"","","",""};
+    for(int k=0;k<n;++k){
+      //strcpy(arr[k],q->answer[k]);
+      arr[k]=q->answer[k];
+      //printf("arr[%d]=%s | ",k,arr[k]);
+    }
+    /*
+    printf("tab avant : ");
+    for (int it = 0; it < n; it++)
+        printf("arr[%d]=%s ", it,arr[it]);
+    printf("\n\n");
+    */
+    for (int i = n-1; i > 0; i--)
+    {
+        int j = rand() % (i+1);
+        swapping(&arr[i], &arr[j]);
+    }
+    /*
+    printf("tab apres : ");
+    for (int ij = 0; ij < n; ij++)
+        printf("arr[%d]=%s ", ij,arr[ij]);
+    printf("\n\n");
+    */
+    for(int l=0;l<n;l++){
+      //printf("BEFORE COPY : answer[%d]=%s AND arr[%d]=%s \n",l,q->answer[l],l,arr[l]);
+      //strcpy(q->answer[l],arr[l]);
+      //memset(q->answer[l],0,511);
+      //memcpy(q->answer[l],arr[l],511);
+      strncpy(q->answer[l], arr[l], 511);
+      //q->answer[l]=arr[l];
+      //printf("AFTER COPY : answer[%d]=%s AND arr[%d]=%s \n",l,q->answer[l],l,arr[l]);
+    }
+    //printf("\n");
+    //Server_printQuestion(q);
+    return q;
 }

@@ -36,5 +36,7 @@ void Server_addAllQuestions(Server* server);
 void Server_printQuestion(Question *q);
 Question* Server_getQuestionFromLine(char* line);
 void Server_sendQuestion(Server* server, Player* player, Question *question);
+void swapping(char** a, char** b);
+Question* Server_shuffleAnswers(Question *q);
 
 #endif

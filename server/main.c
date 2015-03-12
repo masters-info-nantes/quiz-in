@@ -22,6 +22,8 @@ int main(int argc, char **argv) {
 
     Server_addAllQuestions(server);
 
+    //Server_printQuestion(Server_shuffleAnswers(server->questions[5]));
+    
     int id = 1;
     while(true){
         sockaddr_in* clientInfos = malloc(sizeof(sockaddr_in));
