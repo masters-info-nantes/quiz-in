@@ -3,8 +3,14 @@
 
 typedef struct _Question Question;
 struct _Question{
-	char text[512];
-	char answer[4][512];
+	char text[255];
+	char answer[4][255];
+};
+
+typedef struct _Response Response;
+struct _Response{
+	bool currentStatus;
+	int score;
 };
 
 #endif

@@ -67,8 +67,41 @@ void Client_printQuestion(Question q) {
     printf("  Réponse 4 : %s\n", q.answer[3]);
 }
 
-void Client_getQuestion(Client* client){
+
+Question Client_getQuestion(Client* client){
     Question q;
-    int clientStatus = read(client->socketID, &q, sizeof(q));
+    read(client->socketID, &q, sizeof(q));
     Client_printQuestion(q);
+    return q;
+}
+
+void Client_setResponse(Client* client, Question q){
+    int pos;
+    printf("[Quiz in] Choose your response\n");
+    scanf("%d", &pos);
+    pos = pos-1;
+    char response[512];
+    strcpy(response, q.answer[pos]);
+    if(write(client->socketID, response, sizeof(response)) <= 0){
+        printf("error\n");
+        exit(0);
+    }
+}
+
+void Client_getResponse(Client* client){
+    Response r;
+    read(client->socketID, &r, sizeof(r));
+    if(r.currentStatus)
+        printf("[Quiz in] Well done! It's a good answer !\n");
+    else
+        printf("[Quiz in] It's a poor response :(\n");
+    printf("[Quiz in] You have %d points\n", r.score);
+}
+
+void Client_sendOK(Client* client){
+    int ok = 1;
+    if(write(client->socketID, &ok, sizeof(int)) <= 0){
+        printf("error\n");
+        exit(0);
+    }
 }

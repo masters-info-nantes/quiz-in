@@ -26,6 +26,7 @@ struct _Server {
     Player** players;
     pthread_t* clientsThread;
     Question** questions;
+    int nbQuestions;
 };
 
 Server* Server_create();
@@ -36,5 +37,8 @@ void Server_addAllQuestions(Server* server);
 void Server_printQuestion(Question *q);
 Question* Server_getQuestionFromLine(char* line);
 void Server_sendQuestion(Server* server, Player* player, Question *question);
+bool Server_getResponse(Server* server, Player* player, Question *question);
+void Server_sendStatus(Server* server, Player* player, bool currentStatus);
+void Server_getOK(Server* server, Player* player);
 
 #endif

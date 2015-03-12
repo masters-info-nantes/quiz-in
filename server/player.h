@@ -16,6 +16,7 @@ struct _Player {
     int socketID;
     int playerID;
     char pseudo[51];
+    int score;
     sockaddr_in* socketInfos;
 };
 

@@ -19,6 +19,11 @@ int main(int argc, char **argv) {
         exit(1);
     
     Client_setPseudo(client);
-    Client_getQuestion(client);
+    while(true) {
+        Question q = Client_getQuestion(client);
+        Client_setResponse(client,q);
+        Client_getResponse(client);
+        Client_sendOK(client);
+    }
 
 }

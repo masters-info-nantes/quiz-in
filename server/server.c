@@ -18,11 +18,11 @@ Server* Server_create(){
         }
         else {
             free(server);
+            srand(time(NULL)); // For real random
+    
         }
     }
 
-    srand(time(NULL)); // For real random
-    
     return server;
 }
 
@@ -76,6 +76,7 @@ void Server_listenClients(Server* server, int socketID, sockaddr_in* clientInfos
     player->playerID = id;
     player->socketID = socketID; 
     player->socketInfos = clientInfos;
+    player->score = 0;
     
     void** threadParams = (void**) calloc(2, sizeof(void*));
     threadParams[0] = player;
@@ -116,7 +117,14 @@ void* Server_clientThread(void* params) {
     strcpy(player->pseudo, name);
     printf("[Quiz in][server] New client is %s\n", name);
 
-    Server_sendQuestion(server, player, server->questions[0]);
+    while(true) {
+        int i = rand()%(server->nbQuestions);
+        Server_sendQuestion(server, player, server->questions[i]);
+        bool status = Server_getResponse(server, player, server->questions[i]);
+        Server_sendStatus(server, player, status);
+        Server_getOK(server, player);
+        sleep(2);
+    }
 
     return NULL;
 }
@@ -138,6 +146,7 @@ void Server_addAllQuestions(Server* server) {
     // but there has to be a line at least before the last line
     if(ch != '\n' && number_of_lines != 0) 
         number_of_lines++;
+    server->nbQuestions = number_of_lines;
     fclose(file);
 
     server->questions = calloc(number_of_lines, sizeof(Question*));
@@ -179,13 +188,71 @@ Question* Server_getQuestionFromLine(char* line) {
 }
 
 void Server_sendQuestion(Server* server, Player* player, Question *question){
+
+    Question *q = (Question*) malloc(sizeof(Question));
+   
+   strncpy(q->text, question->text, 254);
+   strncpy(q->answer[0], question->answer[0], 254);
+   strncpy(q->answer[1], question->answer[1], 254);
+   strncpy(q->answer[2], question->answer[2], 254);
+   strncpy(q->answer[3], question->answer[3], 254);
+
+   char temp[254];
+
+   for(int i = 0; i < 30; i++) {
+        int start = rand()%4;
+        int end = rand()%4;
+
+        if(start != end) {
+            strncpy(temp, q->answer[start], 254);
+            strncpy(q->answer[start], q->answer[end], 254);
+            strncpy(q->answer[end], temp, 254);
+        }
+   }
     
-    void* params = (void*)question;
+    void* params = (void*)q;
     
-    if(write(player->socketID, params, sizeof(params)) <= 0){
+    if(write(player->socketID, params, sizeof(Question)) <= 0){
         printf("error\n");
         exit(0);
     }
      
     printf("[Quiz in][server] Question send to player #%d : %s\n", player->playerID, player->pseudo);
+}
+
+bool Server_getResponse(Server* server, Player* player, Question *question){
+
+    char response[254];
+    if ((read(player->socketID, response, sizeof(response))) <= 0) 
+        return false;
+
+    if(strcmp(question->answer[0],response) == 0) {
+        printf("[Quiz in][server] Good response send from player #%d : %s\n", player->playerID, player->pseudo);
+        return true;
+    } else {
+        printf("[Quiz in][server] Bad response send from player #%d : %s\n", player->playerID, player->pseudo);
+        return false;
+    }
+}
+
+void Server_sendStatus(Server* server, Player* player, bool currentStatus){
+    Response *r = (Response*) malloc(sizeof(Response));
+    if(currentStatus)
+        player->score = player->score+1;
+    r->score = player->score;
+    r->currentStatus = currentStatus;
+
+    void* params = (void*)r;
+
+    if(write(player->socketID, params, sizeof(Response)) <= 0){
+        printf("error\n");
+        exit(0);
+    }
+}
+
+void Server_getOK(Server* server, Player* player){
+    int ok;
+    if ((read(player->socketID, &ok, sizeof(int))) <= 0) 
+        return;
+    printf("[Quiz in][server] Score send to player #%d : %s\n", player->playerID, player->pseudo);
 }

@@ -27,7 +27,10 @@ Client* Client_create();
 bool Client_run(Client* client, char* serverName, int serverPort);
 
 void Client_setPseudo(Client* client);
-void Client_getQuestion(Client* client);
+Question Client_getQuestion(Client* client);
 void Client_printQuestion(Question q);
+void Client_setResponse(Client* client, Question q);
+void Client_getResponse(Client* client);
+void Client_sendOK(Client* client);
 
 #endif
