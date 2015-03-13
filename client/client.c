@@ -80,7 +80,7 @@ void Client_setResponse(Client* client, Question q){
     printf("[Quiz in] Choose your response\n");
     scanf("%d", &pos);
     pos = pos-1;
-    char response[512];
+    char response[254];
     strcpy(response, q.answer[pos]);
     if(write(client->socketID, response, sizeof(response)) <= 0){
         printf("error\n");
